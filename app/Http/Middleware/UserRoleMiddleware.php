@@ -14,7 +14,7 @@ class UserRoleMiddleware
      *
      * @param \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response) $next
      */
-    public function handle(Request $request, Closure $next, $roles): Response
+    public function handle(Request $request, Closure $next, $roles)
     {
         if (!$request->user()->hasRole(explode('|', $roles))) {
             throw new APIException(403, 'Forbidden for you');

@@ -68,4 +68,5 @@ class User extends Authenticatable
     {
         return in_array($this->role->code, $roles);
     }
+
 }

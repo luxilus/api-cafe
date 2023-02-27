@@ -3,16 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Exceptions\APIException;
+use App\Http\Requests\UserLoginRequest;
+use App\Http\Resources\UserCollection;
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
-class UserController
+class UserController extends Controller
 {
-    public
-    function login(Request $request)
+    public function login(UserLoginRequest $request)
     {
         $user = User::where([
             'login' => $request->login,
@@ -46,6 +48,10 @@ class UserController
     public
     function index()
     {
-        return DB::table('users')->get();
+//        вернуть одного пользователя
+//        return new UserResource(User::first());
+//        вернуть коллекцию пользователей
+//        return new UserCollection(User::all());
+        return new UserCollection(User::all());
     }
 }

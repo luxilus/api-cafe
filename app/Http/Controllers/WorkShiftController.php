@@ -2,47 +2,46 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CloseRequest;
+use App\Http\Requests\OpenRequest;
+use App\Http\Requests\WorkShiftRequest;
+use App\Http\Resources\WorkShiftResource;
 use App\Models\User;
 use App\Models\WorkShift;
 use Illuminate\Support\Facades\DB;
 
 class WorkShiftController
 {
-    public function store()
+    public function store(WorkShiftRequest $request)
     {
-        DB::table('work_shifts')->insert([
-            'start' => date('Y-m-d' . ' 08:00:00'),
-            'end' => date('Y-m-d' . ' 18:00:00')
+        $workShift = WorkShift::create($request->all());
+        return new WorkShiftResource($workShift);
+    }
+
+    public function open(WorkShift $id, OpenRequest $openRequest)
+    {
+        $workShift = new WorkShiftResource($id->open());
+        return response()->json([
+            'data' => [
+                'id' => $workShift->id,
+                'start' => $workShift->start,
+                'end' => $workShift->end,
+                'active' => $workShift->active,
+            ]
         ]);
-        return 'Смена успешно добавленна';
     }
 
-    public function open(WorkShift $id)
+    public function close(WorkShift $id, CloseRequest $closeRequest)
     {
-        if (DB::table('work_shifts')
-                ->where('id', '=', $id['id'])
-                ->value('active') == '1') {
-            return "Смена уже открыта";
-        } else {
-            DB::table('work_shifts')
-                ->where('id', '=', $id['id'])
-                ->update(['active' => '1']);
-            return 'Смена успешно открыта';
-        }
-    }
-
-    public function close(WorkShift $id)
-    {
-        if (DB::table('work_shifts')
-                ->where('id', '=', $id['id'])
-                ->value('active') == '0') {
-            return "Смена уже закрыта";
-        } else {
-            DB::table('work_shifts')
-                ->where('id', '=', $id['id'])
-                ->update(['active' => '0']);
-            return 'Смена успешно закрыта';
-        }
+        $workShift = new WorkShiftResource($id->close());
+        return response()->json([
+            'data' => [
+                'id' => $workShift->id,
+                'start' => $workShift->start,
+                'end' => $workShift->end,
+                'active' => $workShift->active,
+            ]
+        ]);
     }
 
     public function addUser(User $id)

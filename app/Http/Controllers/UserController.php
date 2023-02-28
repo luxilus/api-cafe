@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exceptions\APIException;
+use App\Http\Requests\UserAddRequest;
 use App\Http\Requests\UserLoginRequest;
 use App\Http\Resources\UserCollection;
 use App\Http\Resources\UserResource;
@@ -40,9 +41,19 @@ class UserController extends Controller
     }
 
     public
-    function store()
+    function store(UserAddRequest $request)
     {
-        return "Добавление сотрудника";
+        $user = User::create($request->all() + [
+                'photo_file' =>
+                    $request->photo_file ? $request->photo_file->store('photos') : null
+            ]);
+
+        return response()->json([
+            'data' => [
+                'id' => $user->id,
+                'status' => 'created',
+            ]
+        ]);
     }
 
     public
@@ -54,4 +65,5 @@ class UserController extends Controller
 //        return new UserCollection(User::all());
         return new UserCollection(User::all());
     }
+
 }

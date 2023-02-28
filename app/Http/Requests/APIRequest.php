@@ -14,7 +14,7 @@ class APIRequest extends FormRequest
         throw new APIException(422, "Validation Error", $validator->errors());
     }
 
-    public function authorize(): bool
+    public function authorize()
     {
         return true;
     }
@@ -24,7 +24,7 @@ class APIRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\Rule|array|string>
      */
-    public function rules(): array
+    public function rules()
     {
         return [
 

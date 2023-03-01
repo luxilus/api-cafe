@@ -7,5 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class OrderMenu extends Model
 {
-    use HasFactory;
+    protected $fillable = [
+        'menu_id',
+        'order_id',
+        'count'
+    ];
+
+    public function product()
+    {
+        return $this->belongsTo(Menu::class, 'menu_id');
+    }
 }

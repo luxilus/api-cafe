@@ -7,6 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class WorkShift extends Model
 {
+    protected $fillable = [
+        'start',
+        'end',
+        'active'
+    ];
 
     public function open()
     {
@@ -22,9 +27,19 @@ class WorkShift extends Model
         return $this;
     }
 
-    protected $fillable = [
-        'start',
-        'end',
-        'active',
-    ];
+    public function workers()
+    {
+        return $this->belongsToMany(User::class, 'shift_workers');
+    }
+
+    public function hasUser(User $user)
+    {
+        return $this->workers()->where(['user_id' => $user->id])->exists();
+    }
+
+    public function orders()
+    {
+        return $this->hasManyThrough(Order::class, ShiftWorker::class);
+    }
+
 }

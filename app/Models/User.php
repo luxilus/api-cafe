@@ -71,5 +71,11 @@ class User extends Authenticatable
     {
         return in_array($this->role->code, $roles);
     }
-
+    public function shiftWorkers(){
+        return $this->hasMany(ShiftWorker::class);
+    }
+    public function getShiftWorker($work_shift_id)
+    {
+        return $this->shiftWorkers()->where(['work_shift_id' => $work_shift_id])->first();
+    }
 }
